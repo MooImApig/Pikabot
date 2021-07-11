@@ -64,6 +64,24 @@ bot.on('message', message => {
   }
 });
 
+//register for discord slash commands
+bot.api.applications(bot.user.id).commands.post({
+    "name": "points",
+    "description": "Check how many points you have on PikaBot"
+  }
+);
+
+//Recieving the event
+bot.ws.on('INTERACTION_CREATE', async interaction => {
+  points = Command.getPoints(message.author.id);
+  bot.api.interactions(interaction.id,interaction.token).callback.post({data:{
+    type: 4,
+    data: {
+      content: 'You have '+points+' points.'
+    }
+  }});
+});
+
 // handles events which are cheaked on each message
 function eventHandler(message){
     bdayHandler(message);
